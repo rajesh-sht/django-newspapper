@@ -39,6 +39,16 @@ class PostDetailView(DetailView):
     template_name = "aznews/detail.html"
     context_object_name = "post"
 
+    def get_context_data(self, **kwargs):
+        obj = self.get_object()
+        obj.views_count += 1
+        obj.save()
+        context = super().get_context_data(**kwargs)
+        context['comments'] = obj.comment_set.all()[:10]
+        print(context['comments'])
+        return context
+
+
 
 class DraftListView(LoginRequiredMixin, ListView):
     model = Post
