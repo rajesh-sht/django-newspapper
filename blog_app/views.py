@@ -58,7 +58,6 @@ class PostDetailView(DetailView):
         return context
 
 
-
 class DraftListView(LoginRequiredMixin, ListView):
     model = Post
     template_name = "post_list.html"
@@ -172,9 +171,10 @@ class NewsLetterView(View):
                 status=400,
             )
 
+
 class ContactView(View):
     template_name = "aznews/contact.html"
-    form_class = ContactForm 
+    form_class = ContactForm
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
@@ -183,28 +183,28 @@ class ContactView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Successfully submitted your query. We will contact you soon.")
+            messages.success(
+                request, "Successfully submitted your query. We will contact you soon.")
         else:
             messages.error(request, "Sorry, Something went wrong.")
         return render(request, self.template_name)
 
+
 class AboutView(TemplateView):
     template_name = "aznews/about.html"
-    
+
 
 class CommentView(View):
     form_class = CommentForm
 
     def post(self, request):
         form = self.form_class(request.POST)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(
                 request, "Successfully submitted your query. We will contact you soon.")
         else:
+            print(form.errors)
             messages.error(request, "Sorry, Something went wrong.")
         post_id = request.POST['post']
         return redirect("post-detail", post_id)
-
-   
